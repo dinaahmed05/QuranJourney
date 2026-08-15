@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Quran Journey</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream: #F7F2E7;
+    --cream-deep: #EFE7D6;
+    --ink: #1E3A2B;
+    --ink-soft: #3C5A47;
+    --green: #22462F;
+    --green-deep: #16301F;
+    --gold: #C7A052;
+    --gold-soft: #E4CE9A;
+    --gold-glow: #F5E3B3;
+    --line: rgba(30,58,43,0.14);
+    --shadow: 0 12px 40px rgba(22,48,31,0.10);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html,body{
+    margin:0; padding:0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Jost', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body{
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(199,160,82,0.10), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(34,70,47,0.08), transparent 45%);
+  }
+
+  .pattern-strip{
+    height: 14px;
+    width: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='14' viewBox='0 0 56 14'%3E%3Cg fill='none' stroke='%23C7A052' stroke-width='1' opacity='0.55'%3E%3Cpath d='M0 14 L14 0 L28 14 L42 0 L56 14'/%3E%3Cpath d='M0 0 L14 14 L28 0 L42 14 L56 0'/%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    opacity: 0.7;
+  }
+
+  header{
+    text-align: center;
+    padding: 56px 24px 20px;
+    position: relative;
+  }
+
+  .kicker{
+    font-family: 'Amiri', serif;
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 10px;
+  }
+
+  h1{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(34px, 6vw, 56px);
+    margin: 0;
+    color: var(--green-deep);
+    letter-spacing: 0.01em;
+  }
+
+  .subtitle{
+    font-size: 15px;
+    color: var(--ink-soft);
+    margin-top: 10px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  main{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 10px 20px 90px;
+  }
+
+  /* ---------- DASHBOARD CARD ---------- */
+  .dashboard{
+    background: linear-gradient(180deg, #FFFDF8, var(--cream-deep));
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 40px clamp(20px, 4vw, 52px) 36px;
+    margin-top: 28px;
+    position: relative;
+  }
+
+  .input-row{
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .input-label{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--ink-soft);
+  }
+
+  #pageInput{
+    width: 100px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--green-deep);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    padding: 6px 8px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #pageInput:focus{
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(199,160,82,0.16);
+  }
+  #pageInput::-webkit-outer-spin-button,
+  #pageInput::-webkit-inner-spin-button{ opacity: 1; }
+
+  .of-total{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--ink-soft);
+  }
+
+  #updateBtn{
+    background: var(--green-deep);
+    color: var(--gold-glow);
+    border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    padding: 9px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background .2s, transform .2s;
+    margin-left: 4px;
+  }
+  #updateBtn:hover{ background: var(--green); }
+  #updateBtn:active{ transform: scale(0.97); }
+
+  .input-hint{
+    text-align: center;
+    font-size: 12.5px;
+    color: rgba(30,58,43,0.5);
+    margin-bottom: 30px;
+  }
+
+  .content-grid{
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (max-width: 620px){
+    .content-grid{ grid-template-columns: 1fr; justify-items: center; text-align:center; }
+  }
+
+  /* circular progress */
+  .ring-wrap{
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+  svg.ring{ transform: rotate(-90deg); }
+  .ring-bg{ fill:none; stroke: rgba(34,70,47,0.10); stroke-width: 10; }
+  .ring-fg{
+    fill:none;
+    stroke: url(#ringGradient);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .ring-center{
+    position: absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+  }
+  .ring-percent{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--green-deep);
+    line-height: 1;
+  }
+  .ring-percent-label{
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  .stats{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 24px;
+  }
+  @media (max-width: 620px){
+    .stats{ grid-template-columns: 1fr 1fr; width: 100%; }
+  }
+  .stat{
+    border-left: 2px solid var(--gold-soft);
+    padding-left: 14px;
+  }
+  .stat-value{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--green-deep);
+  }
+  .stat-label{
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  .message-bar{
+    margin-top: 32px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--ink);
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    transition: opacity .3s;
+  }
+
+  .reset-row{
+    text-align: center;
+    margin-top: 22px;
+  }
+  #resetBtn{
+    background: none;
+    border: 1px solid rgba(30,58,43,0.25);
+    color: var(--ink-soft);
+    font-family: 'Jost', sans-serif;
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    padding: 8px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  #resetBtn:hover{
+    border-color: var(--gold);
+    color: var(--green-deep);
+    background: rgba(199,160,82,0.08);
+  }
+
+  /* ---------- MOUNTAIN ---------- */
+  .mountain-section{
+    margin-top: 56px;
+  }
+  .mountain-heading{
+    text-align: center;
+    font-family: 'Amiri', serif;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .mountain-title{
+    text-align:center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--green-deep);
+    margin: 0 0 26px;
+  }
+
+  .mountain-card{
+    background: linear-gradient(180deg, #F1EBDA 0%, #E9E0C9 100%);
+    border-radius: 26px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    padding: clamp(10px, 3vw, 30px);
+    overflow: hidden;
+    position: relative;
+  }
+
+  #mountainSvg{ width: 100%; height: auto; display:block; }
+
+  .marker-label{
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 15px;
+    fill: var(--green-deep);
+  }
+
+  .milestone-label{
+    font-family: 'Jost', sans-serif;
+    font-size: 10.5px;
+    fill: var(--ink-soft);
+    letter-spacing: 0.02em;
+  }
+
+  .milestone-label.active{
+    fill: var(--gold);
+    font-weight: 600;
+  }
+
+  .peak-caption{
+    font-family: 'Amiri', serif;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    fill: var(--green-deep);
+  }
+  .peak-subcaption{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px;
+    fill: var(--ink-soft);
+  }
+
+  /* completion overlay */
+  .completion-overlay{
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(247,242,231,0.97), rgba(233,224,201,0.99));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    padding: 24px;
+  }
+  .completion-overlay.show{
+    opacity: 1;
+    pointer-events: all;
+  }
+  .completion-overlay .khatm{
+    font-family: 'Amiri', serif;
+    font-size: clamp(28px,6vw,44px);
+    color: var(--green-deep);
+    margin-bottom: 14px;
+  }
+  .completion-overlay .line1{
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px,3.4vw,28px);
+    color: var(--ink);
+    margin: 4px 0;
+  }
+  .completion-overlay .line2{
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(16px,2.6vw,20px);
+    color: var(--ink-soft);
+    margin: 4px 0 26px;
+  }
+  #closeOverlay{
+    background: var(--green-deep);
+    color: var(--gold-glow);
+    border: none;
+    padding: 10px 26px;
+    border-radius: 999px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+
+  footer{
+    text-align: center;
+    padding: 30px 20px 60px;
+    font-family: 'Amiri', serif;
+    font-size: 13px;
+    color: rgba(30,58,43,0.45);
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+
+<div class="pattern-strip"></div>
+
+<header>
+  <p class="kicker">بِسْمِ اللَّهِ</p>
+  <h1>My Qur'an Journey</h1>
+  <p class="subtitle">A quiet place to watch your reading grow, page by page.</p>
+</header>
+
+<main>
+
+  <section class="dashboard">
+    <div class="input-row">
+      <span class="input-label">Current Page:</span>
+      <input type="number" id="pageInput" min="1" max="688" value="1" inputmode="numeric">
+      <span class="of-total">/ 688</span>
+      <button id="updateBtn" type="button">Update</button>
+    </div>
+    <p class="input-hint">Enter the page you're currently reading, then press Update or hit Enter.</p>
+
+    <div class="content-grid">
+      <div class="ring-wrap">
+        <svg class="ring" width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#C7A052"/>
+              <stop offset="100%" stop-color="#22462F"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="100" cy="100" r="86"></circle>
+          <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="86"
+                  stroke-dasharray="540.35" stroke-dashoffset="540.35"></circle>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-percent" id="ringPercent">0%</div>
+          <div class="ring-percent-label">Completed</div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="statCompleted">0</div>
+          <div class="stat-label">Pages completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="statRemaining">688</div>
+          <div class="stat-label">Pages remaining</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="statPercentDone">0.00%</div>
+          <div class="stat-label">Percent completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="statPercentLeft">100.00%</div>
+          <div class="stat-label">Percent remaining</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="message-bar" id="messageBar">Every journey begins with one page. بِسْمِ اللَّهِ 🤍</p>
+
+    <div class="reset-row">
+      <button id="resetBtn">Start over</button>
+    </div>
+  </section>
+
+  <section class="mountain-section">
+    <p class="mountain-heading">The Path</p>
+    <h2 class="mountain-title">From the first page to the peak</h2>
+
+    <div class="mountain-card">
+      <svg id="mountainSvg" viewBox="0 0 1000 620" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#F3ECD9"/>
+            <stop offset="100%" stop-color="#E9DFC4"/>
+          </linearGradient>
+          <linearGradient id="mountainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2C4E38"/>
+            <stop offset="100%" stop-color="#16301F"/>
+          </linearGradient>
+          <linearGradient id="mountainGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#3A6248"/>
+            <stop offset="100%" stop-color="#1F3D2B"/>
+          </linearGradient>
+          <radialGradient id="peakGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F5E3B3" stop-opacity="0.95"/>
+            <stop offset="60%" stop-color="#E4CE9A" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#E4CE9A" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="markerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F5E3B3" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#F5E3B3" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <rect x="0" y="0" width="1000" height="620" fill="url(#skyGradient)"/>
+
+        <!-- distant range -->
+        <path d="M0,430 L120,340 L230,410 L330,320 L430,400 L560,300 L650,400 L780,330 L900,420 L1000,370 L1000,620 L0,620 Z"
+              fill="#DED2AE" opacity="0.55"/>
+
+        <!-- main mountain -->
+        <path id="mountainMain"
+              d="M40,560 L230,400 L330,470 L470,270 L560,340 L650,190 L730,270 L830,120 L920,230 L1000,150 L1000,620 L0,620 Z"
+              fill="url(#mountainGradient)"/>
+        <path d="M470,270 L560,340 L650,190 L730,270 L830,120 L920,230 L1000,150"
+              fill="none" stroke="#4E7358" stroke-width="2" opacity="0.5"/>
+
+        <!-- peak glow -->
+        <circle cx="830" cy="120" r="90" fill="url(#peakGlow)" id="peakGlowCircle"/>
+
+        <!-- trail -->
+        <path id="trailPath"
+              d="M70,548 C160,500 200,470 260,455 C340,435 360,410 400,395
+                 C470,368 460,330 520,305 C600,272 610,250 660,222
+                 C720,190 740,165 790,145 C815,134 822,127 830,120"
+              fill="none" stroke="#C7A052" stroke-width="2.5"
+              stroke-dasharray="7 7" opacity="0.75"/>
+
+        <!-- milestone dots (positions computed by JS) -->
+        <g id="milestones"></g>
+
+        <!-- current position marker -->
+        <g id="markerGroup">
+          <circle id="markerGlowCircle" r="26" fill="url(#markerGlow)"/>
+          <circle id="markerDot" r="7" fill="#F7F2E7" stroke="#C7A052" stroke-width="3"/>
+          <text id="markerText" class="marker-label" text-anchor="middle" y="-20">You are here 🌿</text>
+        </g>
+
+        <!-- peak label -->
+        <text x="830" y="82" text-anchor="middle" class="peak-caption">QURĀN COMPLETED</text>
+        <text x="830" y="100" text-anchor="middle" class="peak-subcaption">Alhamdulillāh 🤍</text>
+
+        <!-- particles for completion -->
+        <g id="particles" opacity="0"></g>
+      </svg>
+    </div>
+  </section>
+
+</main>
+
+<footer>وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ</footer>
+
+<div class="completion-overlay" id="completionOverlay">
+  <div class="khatm">خَتْمُ الْقُرْآن</div>
+  <div class="line1">You made it to the peak.</div>
+  <div class="line1">Alhamdulillah for the journey.</div>
+  <div class="line2">Khatm al-Qur'an 🤍</div>
+  <button id="closeOverlay">Continue</button>
+</div>
+
+<script>
+(function(){
+  const TOTAL = 688;
+  const STORAGE_KEY = 'quranJourneyCurrentPage';
+
+  const pageInput = document.getElementById('pageInput');
+  const ringFg = document.getElementById('ringFg');
+  const ringPercent = document.getElementById('ringPercent');
+  const statCompleted = document.getElementById('statCompleted');
+  const statRemaining = document.getElementById('statRemaining');
+  const statPercentDone = document.getElementById('statPercentDone');
+  const statPercentLeft = document.getElementById('statPercentLeft');
+  const messageBar = document.getElementById('messageBar');
+  const resetBtn = document.getElementById('resetBtn');
+  const trailPath = document.getElementById('trailPath');
+  const markerGroup = document.getElementById('markerGroup');
+  const milestonesG = document.getElementById('milestones');
+  const peakGlowCircle = document.getElementById('peakGlowCircle');
+  const completionOverlay = document.getElementById('completionOverlay');
+  const closeOverlay = document.getElementById('closeOverlay');
+  const particlesG = document.getElementById('particles');
+
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 86;
+
+  const milestoneDefs = [
+    {pct: 0,   label: '0% — Beginning'},
+    {pct: 25,  label: '25% — One Quarter'},
+    {pct: 50,  label: '50% — Halfway There'},
+    {pct: 75,  label: '75% — Almost There'},
+    {pct: 100, label: 'Khatm al-Qur\u2019an 🤍'}
+  ];
+
+  function pointAtPercent(pct){
+    const len = trailPath.getTotalLength();
+    const clamped = Math.max(0, Math.min(100, pct));
+    return trailPath.getPointAtLength(len * (clamped/100));
+  }
+
+  function buildMilestones(){
+    milestonesG.innerHTML = '';
+    milestoneDefs.forEach(m => {
+      const p = pointAtPercent(m.pct);
+      const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('cx', p.x);
+      dot.setAttribute('cy', p.y);
+      dot.setAttribute('r', 4);
+      dot.setAttribute('fill', '#F7F2E7');
+      dot.setAttribute('stroke', '#22462F');
+      dot.setAttribute('stroke-width', 1.5);
+      dot.setAttribute('class', 'milestone-dot');
+      dot.setAttribute('data-pct', m.pct);
+      milestonesG.appendChild(dot);
+
+      const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+      label.setAttribute('x', p.x);
+      label.setAttribute('y', p.y - 12);
+      label.setAttribute('text-anchor', m.pct === 100 ? 'end' : 'middle');
+      label.setAttribute('class', 'milestone-label');
+      label.setAttribute('data-pct', m.pct);
+      label.textContent = m.label;
+      milestonesG.appendChild(label);
+    });
+  }
+
+  function messageForPercent(pct){
+    if (pct >= 100) return "Alhamdulillah! You completed the Qur'an. 🤍";
+    if (pct >= 90)  return "You can see the peak. Almost there. 🤍";
+    if (pct >= 75)  return "The summit is getting closer. Keep going.";
+    if (pct >= 50)  return "You are halfway through your journey. Alhamdulillah.";
+    if (pct >= 25)  return "Keep going. You are building something beautiful.";
+    return "Every journey begins with one page. بِسْمِ اللَّهِ 🤍";
+  }
+
+  function updateMilestoneHighlight(pct){
+    document.querySelectorAll('.milestone-label').forEach(el => {
+      const p = parseFloat(el.getAttribute('data-pct'));
+      el.classList.toggle('active', pct >= p && (p === 0 ? pct === 0 : true) && Math.abs(pct - p) < 12.5 || (pct >= p && pct < p + 25 && p !== 100) || (pct >= 100 && p === 100));
+    });
+  }
+
+  function createParticles(){
+    particlesG.innerHTML = '';
+    for (let i=0;i<18;i++){
+      const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      const angle = Math.random()*Math.PI*2;
+      const dist = 40 + Math.random()*120;
+      c.setAttribute('cx', 830 + Math.cos(angle)*dist*0.3);
+      c.setAttribute('cy', 120 + Math.sin(angle)*dist*0.3);
+      c.setAttribute('r', 1.5 + Math.random()*2.5);
+      c.setAttribute('fill', '#F5E3B3');
+      c.style.animation = `floatUp ${3 + Math.random()*3}s ease-in-out ${Math.random()*2}s infinite`;
+      particlesG.appendChild(c);
+    }
+  }
+
+  const styleTag = document.createElement('style');
+  styleTag.textContent = `
+    @keyframes floatUp {
+      0%   { transform: translateY(0px); opacity: 0; }
+      15%  { opacity: 0.9; }
+      50%  { transform: translateY(-40px); opacity: 0.6; }
+      100% { transform: translateY(-90px); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(styleTag);
+
+  function render(page){
+    const p = Math.max(1, Math.min(TOTAL, Math.round(page) || 1));
+    pageInput.value = p;
+
+    const completed = p;
+    const remaining = TOTAL - p;
+    const pctDone = (p / TOTAL) * 100;
+    const pctLeft = 100 - pctDone;
+
+    statCompleted.textContent = completed.toLocaleString();
+    statRemaining.textContent = remaining.toLocaleString();
+    statPercentDone.textContent = pctDone.toFixed(2) + '%';
+    statPercentLeft.textContent = pctLeft.toFixed(2) + '%';
+    ringPercent.textContent = Math.round(pctDone) + '%';
+
+    const offset = RING_CIRCUMFERENCE * (1 - pctDone/100);
+    ringFg.style.strokeDashoffset = offset;
+
+    messageBar.textContent = messageForPercent(pctDone);
+
+    const pt = pointAtPercent(pctDone);
+    markerGroup.setAttribute('transform', `translate(${pt.x},${pt.y})`);
+
+    updateMilestoneHighlight(pctDone);
+
+    const isComplete = p >= TOTAL;
+    peakGlowCircle.setAttribute('opacity', isComplete ? 1 : (0.35 + (pctDone/100)*0.4));
+    particlesG.setAttribute('opacity', isComplete ? 1 : 0);
+    if (isComplete) createParticles();
+
+    localStorage.setItem(STORAGE_KEY, String(p));
+
+    return isComplete;
+  }
+
+  let lastCompleteShown = false;
+
+  function handleInput(showOverlayOnComplete){
+    const val = parseInt(pageInput.value, 10);
+    const isComplete = render(val);
+    if (isComplete && showOverlayOnComplete && !lastCompleteShown){
+      completionOverlay.classList.add('show');
+    }
+    lastCompleteShown = isComplete;
+  }
+
+  const updateBtn = document.getElementById('updateBtn');
+
+  function confirmInput(){
+    if (pageInput.value === '' || isNaN(parseInt(pageInput.value,10))) {
+      render(1);
+      return;
+    }
+    handleInput(true);
+  }
+
+  updateBtn.addEventListener('click', confirmInput);
+  pageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      confirmInput();
+      pageInput.blur();
+    }
+  });
+  pageInput.addEventListener('blur', confirmInput);
+
+  resetBtn.addEventListener('click', () => {
+    completionOverlay.classList.remove('show');
+    lastCompleteShown = false;
+    render(1);
+  });
+
+  closeOverlay.addEventListener('click', () => {
+    completionOverlay.classList.remove('show');
+  });
+
+  window.addEventListener('resize', () => {
+    buildMilestones();
+    const val = parseInt(pageInput.value, 10);
+    render(val || 1);
+  });
+
+  // init
+  buildMilestones();
+  const saved = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+  const initial = (!isNaN(saved) && saved >= 1 && saved <= TOTAL) ? saved : 1;
+  const startComplete = render(initial);
+  lastCompleteShown = startComplete;
+})();
+</script>
+
+</body>
+</html>
